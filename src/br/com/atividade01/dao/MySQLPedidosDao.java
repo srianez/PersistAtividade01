@@ -33,9 +33,12 @@ public class MySQLPedidosDao implements PedidosDao {
 			stmt.execute();
 
 			rs = stmt.getGeneratedKeys();
+			
 			if (rs.next()) {
 				pedido.setIdpedido(rs.getInt(1));
+				System.out.println("Pedido cadastrado: " + pedido.getIdpedido() + " " + pedido.getDescricao() + " para cliente " + pedido.getIdcliente());
 			}
+			
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -48,6 +51,7 @@ public class MySQLPedidosDao implements PedidosDao {
 		return pedido;
 	}
 
+	
 	@Override
 	public List<Pedidos> listarPedidos(int idCliente) throws Exception {
 		
@@ -55,15 +59,15 @@ public class MySQLPedidosDao implements PedidosDao {
 
 		try {
 			cn = MySQLDaoFactory.criarConexao();
-			
-			System.out.println("Cheguei danaaaaada");
-			
-			System.out.println("idCliente" + idCliente);
 
 			String sql = "SELECT IDPEDIDO, DATA, DESCRICAO, VALOR FROM PEDIDOS WHERE IDCLIENTE=?";
+			System.out.println("Parse da QUERY OK. Listar pedidos do cliente: " + idCliente);
+			
 			stmt = cn.prepareStatement(sql);
 			stmt.setInt(1, idCliente);
+			
 			rs = stmt.executeQuery();
+			
 			while (rs.next()) {
 				pedidos.add(new Pedidos(rs.getInt("IDPEDIDO"), 
 						                idCliente, 
@@ -85,4 +89,42 @@ public class MySQLPedidosDao implements PedidosDao {
 		return pedidos;
 
 	}
+//===================
+	@Override
+	public Double totalPedidos() throws Exception {
+		
+        Double total = new Double(0);
+        
+		try {
+			cn = MySQLDaoFactory.criarConexao();
+
+			String sql = "SELECT SUM(VALOR) AS TOTAL FROM PEDIDOS";
+			
+			stmt = cn.prepareStatement(sql);
+			
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				total = rs.getDouble("TOTAL");
+				break;
+			}
+			
+			return total;
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			cn.close();
+			if (stmt != null)
+				stmt.close();
+			if (rs != null)
+				rs.close();
+		}
+
+
+	}
+
+	
+	
+//=================	
 }

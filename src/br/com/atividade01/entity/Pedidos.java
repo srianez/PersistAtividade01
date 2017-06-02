@@ -1,5 +1,6 @@
 package br.com.atividade01.entity;
 
+import java.beans.Transient;
 import java.util.Date;
 
 public class Pedidos {
@@ -13,7 +14,7 @@ public class Pedidos {
 	public Pedidos(){
 		
 	}
-	
+
 	public Pedidos(Integer idpedido, Integer idcliente, Date data, String descricao, Double valor){
 		super();
 		this.idpedido = idpedido;

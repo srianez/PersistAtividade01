@@ -16,39 +16,47 @@ public class Main {
 		
 		try {
 			
-			ClientesDao clientesDao = DaoFactory.getDaoFactory().getClientesDao();
-			System.out.println("1");
-			List<Pedidos> listaPedidos = new ArrayList<>();
+			//Cadastro do cliente
+			ClientesDao clientesDao = DaoFactory.getDaoFactory().getClientesDao();	
 			
 			Clientes cliente = new Clientes();
-			cliente.setNome("Bob sponja");
-			cliente.setEmail("silas@gmail.com");
-			System.out.println("2");
-			cliente = clientesDao.inserirCliente(cliente);
-			System.out.println("3");
+			cliente.setNome("Pipipitchu");
+			cliente.setEmail("hayeahyeah@gmail.com");
 			
+			cliente = clientesDao.inserirCliente(cliente);	
 			
+//===============================================================================================
+			//Cadastro do pedido
+			
+			List<Pedidos> listaPedidos = new ArrayList<>();
+			//List<Pedidos> totalPedidos = new ArrayList<>();
+			Double totalPedidos;
+	
 			PedidosDao pedidosDao = DaoFactory.getDaoFactory().getPedidosDao();	
 			
 			Pedidos pedido = new Pedidos();
 			
 			pedido.setData(new Date());
-			pedido.setDescricao("Caderno do batman");
-			pedido.setValor(15.80);
+			pedido.setDescricao("Boné do batman");
+			pedido.setValor(19.80);
 			
+			
+			//seta o código do cliente cadastrado anteriormente (FK)
 			pedido.setIdcliente(cliente.getIdcliente());
-			
-			System.out.println("cliente.getIdcliente() " + cliente.getIdcliente());
-			
+
 			pedidosDao.incluirPedido(pedido);
 			
-			System.out.println("kkkkkkkkkkk");
+			listaPedidos = pedidosDao.listarPedidos(cliente.getIdcliente());
+			totalPedidos = pedidosDao.totalPedidos();
 			
-			listaPedidos = pedidosDao.listarPedidos(6);
-			
+			//Exibe os dados do pedido que foi cadastrado anteriormente. Dados carregados através do SELECT
 			for (Pedidos pedidos : listaPedidos) {
-				System.out.println(pedidos.getDescricao());
+				System.out.println("Pedido Efetuado com o item: "+ pedidos.getDescricao() +
+						           " com valor de: " + pedidos.getValor()+
+						           ". Data da compra: "+ pedidos.getData());
 			}
+			
+		    System.out.println("Valor total dos pedidos: " + totalPedidos);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

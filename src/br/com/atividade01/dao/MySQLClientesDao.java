@@ -20,7 +20,7 @@ public class MySQLClientesDao implements ClientesDao{
 
 	@Override
 	public Clientes inserirCliente(Clientes cliente) throws Exception{
-		System.out.println("tentando conexão");
+		
 		try {
 			
 			//abre a conexao
@@ -29,17 +29,22 @@ public class MySQLClientesDao implements ClientesDao{
 			//faz o parse do insert
 			stmt = cn.prepareStatement("INSERT INTO CLIENTES (NOME, EMAIL) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
 			
+			System.out.println("Parse do INSERT OK.");
+			
 			//troca os parâmetros 1: nome, 2: email
 			stmt.setString(1, cliente.getNome()); 	
 			stmt.setString(2, cliente.getEmail());
 			
 			stmt.executeUpdate();
 			
-			rs = stmt.getGeneratedKeys();
+			rs = stmt.getGeneratedKeys(); //busca o ID gerado 
 			
 			while (rs.next()){
 				cliente.setIdcliente(rs.getInt(1));
+				System.out.println("Cliente cadastrado: " + cliente.getIdcliente() + " - " + cliente.getNome());
 			}
+					
+			
 		} catch (Exception e) { 
 			throw e;
 		} finally { 
